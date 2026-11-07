@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6f2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Trinkgeld">
+  <meta name="description" content="Offlinefähiger Trinkgeldrechner für den Restaurantbesuch.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="stylesheet" href="styles.css?v=payment-rounding-2">
+  <title>Trinkgeldrechner</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">RESTAURANT</p>
+        <h1>Trinkgeldrechner</h1>
+      </div>
+      <span class="offline-mark" aria-label="Funktioniert offline"><span></span> Offline</span>
+    </header>
+
+    <section class="panel rating-panel" aria-labelledby="rating-title">
+      <div class="section-heading">
+        <h2 id="rating-title">Wie war der Service?</h2>
+        <span class="subtle">Bewertung</span>
+      </div>
+      <div class="rating-options" role="group" aria-label="Servicebewertung">
+        <button class="rating-option" type="button" data-rating="0" aria-pressed="false">
+          <span class="rating-emoji" aria-hidden="true">😞</span><span>Schlecht</span>
+        </button>
+        <button class="rating-option is-selected" type="button" data-rating="0.5" aria-pressed="true">
+          <span class="rating-emoji" aria-hidden="true">😐</span><span>In Ordnung</span>
+        </button>
+        <button class="rating-option" type="button" data-rating="0.75" aria-pressed="false">
+          <span class="rating-emoji" aria-hidden="true">🙂</span><span>Gut</span>
+        </button>
+        <button class="rating-option" type="button" data-rating="1" aria-pressed="false">
+          <span class="rating-emoji" aria-hidden="true">🤩</span><span>Sehr gut</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel rates-panel" aria-label="Trinkgeldsätze">
+      <label class="field">
+        <span>Basis-Trinkgeldsatz</span>
+        <span class="input-wrap">
+          <input id="base-rate" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Basis-Trinkgeldsatz in Prozent">
+          <span class="input-unit">%</span>
+        </span>
+      </label>
+      <label class="field">
+        <span>Maximaler Trinkgeldsatz</span>
+        <span class="input-wrap">
+          <input id="max-rate" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Maximaler Trinkgeldsatz in Prozent">
+          <span class="input-unit">%</span>
+        </span>
+      </label>
+    </section>
+
+    <section class="panel total-panel" aria-labelledby="total-title">
+      <label class="field total-field" for="total-price">
+        <span id="total-title">Gesamtpreis</span>
+        <span class="input-wrap">
+          <input id="total-price" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="0,00" aria-label="Gesamtpreis in Euro">
+          <span class="input-unit">€</span>
+        </span>
+      </label>
+      <div class="payment-field">
+        <span class="payment-label">Zahlungsart</span>
+        <div class="payment-options" role="group" aria-label="Zahlungsart">
+          <button class="payment-option is-selected" type="button" data-payment="bar" aria-pressed="true">💵 Barzahlung</button>
+          <button class="payment-option" type="button" data-payment="karte" aria-pressed="false">💳 Kartenzahlung</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="categories" aria-label="Kategorien und Mengen">
+      <article class="panel category-row">
+        <label class="field category-price" for="price-drinks">
+          <span>Getränke</span>
+          <span class="input-wrap">
+            <input id="price-drinks" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Durchschnittspreis Getränke in Euro">
+            <span class="input-unit">€</span>
+          </span>
+        </label>
+        <div class="quantity-control" role="group" aria-label="Anzahl Getränke">
+          <button type="button" class="quantity-button" data-quantity="drinks" data-delta="-1" aria-label="Getränke verringern">−</button>
+          <output class="quantity-value" id="count-drinks" aria-live="polite">0</output>
+          <button type="button" class="quantity-button" data-quantity="drinks" data-delta="1" aria-label="Getränke erhöhen">+</button>
+        </div>
+      </article>
+      <article class="panel category-row">
+        <label class="field category-price" for="price-mains">
+          <span>Hauptspeisen</span>
+          <span class="input-wrap">
+            <input id="price-mains" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Durchschnittspreis Hauptspeisen in Euro">
+            <span class="input-unit">€</span>
+          </span>
+        </label>
+        <div class="quantity-control" role="group" aria-label="Anzahl Hauptspeisen">
+          <button type="button" class="quantity-button" data-quantity="mains" data-delta="-1" aria-label="Hauptspeisen verringern">−</button>
+          <output class="quantity-value" id="count-mains" aria-live="polite">0</output>
+          <button type="button" class="quantity-button" data-quantity="mains" data-delta="1" aria-label="Hauptspeisen erhöhen">+</button>
+        </div>
+      </article>
+      <article class="panel category-row">
+        <label class="field category-price" for="price-starters-desserts">
+          <span>Nach- / Vorspeisen</span>
+          <span class="input-wrap">
+            <input id="price-starters-desserts" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-label="Durchschnittspreis Nachspeisen und Vorspeisen in Euro">
+            <span class="input-unit">€</span>
+          </span>
+        </label>
+        <div class="quantity-control" role="group" aria-label="Anzahl Nachspeisen und Vorspeisen">
+          <button type="button" class="quantity-button" data-quantity="startersDesserts" data-delta="-1" aria-label="Nach- und Vorspeisen verringern">−</button>
+          <output class="quantity-value" id="count-starters-desserts" aria-live="polite">0</output>
+          <button type="button" class="quantity-button" data-quantity="startersDesserts" data-delta="1" aria-label="Nach- und Vorspeisen erhöhen">+</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="results" aria-label="Berechnetes Ergebnis" aria-live="polite">
+      <div class="result-card">
+        <span>Gesamt inkl. Trinkgeld</span>
+        <strong id="total-with-tip">0,00&nbsp;€</strong>
+        <div class="rounding-detail">
+          <span>Aufrundung</span>
+          <strong id="rounding-amount">0,00&nbsp;€</strong>
+        </div>
+      </div>
+      <div class="result-card">
+        <span>Trinkgeld in Prozent</span>
+        <strong id="tip-percent">0&nbsp;%</strong>
+      </div>
+      <div class="result-card tip-result">
+        <span>Trinkgeld absolut</span>
+        <strong id="tip-amount">0,00&nbsp;€</strong>
+      </div>
+    </section>
+    <p id="input-message" class="input-message" role="status" aria-live="polite"></p>
+  </main>
+  <script src="calculator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
